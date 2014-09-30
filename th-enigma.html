@@ -1,0 +1,121 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../polymer-ui-accordion/polymer-ui-accordion.html">
+<link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
+<link rel="import" href="../sortable-table/sortable-table.html">
+
+<link rel="import" href="../core-input/core-input.html">
+
+<link rel="import" href="../core-ajax/core-ajax.html">
+
+
+<polymer-element name="th-enigma" attributes="url">
+  <template>
+    <style>
+      :host{
+        font-size: 12px;
+        display: block;
+
+      } 
+      
+
+    </style>
+    <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
+    
+<!--     <polymer-jsonp id="jsonp" auto="true" url="{{url}}" response="{{data}}"></polymer-jsonp>
+ -->    
+<!--     <core-ajax id="ajax" auto="true" url="{{url}}" response="{{data}}"></core-ajax>
+ -->
+ 
+    <core-input value="{{url}}"></core-input>
+    <core-ajax id="ajax" auto url="{{requestUrl}}" withCredentials="false" response="{{data}}"
+      params='{"alt":"json", "q":"chrome"}'
+      handleAs="json"></core-ajax>
+
+
+    
+    
+     <sortable-table PageSize="10" data="{{tableData}}" class="bootstrap" footerTemplate="defaultPager" showFooter="true">
+
+    </sortable-table>
+ 
+  </template>
+
+  <script>
+
+      Polymer('th-enigma', {
+        url:"https://api.enigma.io/v2/stats/iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4/us.gov.whitehouse.visitor-list?select=namefull&operation=frequency",
+        tableData: [],
+        domReady: function() {
+
+          
+          var self = this;
+
+            var url = self.url;
+            var method = 'GET';
+
+
+            var xhr = new XMLHttpRequest();
+            if ("withCredentials" in xhr) {
+              xhr.open(method, url, true);
+            } else if (typeof XDomainRequest != "undefined") {
+              xhr = new XDomainRequest();
+              xhr.open(method, url);
+            } else {
+              // CORS not supported.
+              xhr = null;
+            }
+
+
+
+            if (!xhr) {
+              alert('CORS not supported');
+              return;
+            }
+
+            // Response handlers.
+            xhr.onload = function() {
+              self.tableData = JSON.parse(xhr.response).result.frequency;
+            };
+
+            xhr.onerror = function() {
+              alert('Woops, there was an error making the request.');
+            };
+
+            xhr.send();
+
+        
+        /*  
+          
+          var self = this;
+          self.requestUrl = self.url; //self.url.replace(/(ftp|http|https):\/\//,'http://www.corsproxy.com/');
+          console.log(self.requestUrl);
+
+          console.log('go');
+
+          this.$.ajax.go();
+
+          console.log('gone');
+
+          console.log(this.$.ajax);
+          this.$.ajax.addEventListener('polymer-error',function(e) {
+            console.log(e);
+          });
+          this.$.ajax.addEventListener('polymer-response',function(e) {
+            console.log('response');
+            console.log(e.detail.response[0]);
+            console.log(self.data);
+            console.log(self.$.ajax.response);
+          });
+
+        */
+          
+
+        }
+
+       
+
+      });
+
+  </script>
+</polymer-element>
