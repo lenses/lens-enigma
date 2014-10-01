@@ -26,16 +26,21 @@
  -->    
 <!--     <core-ajax id="ajax" auto="true" url="{{url}}" response="{{data}}"></core-ajax>
  -->
+
+    <core-input value="{{apiKey}}"></core-input>
+    <core-input value="{{dataSet}}"></core-input>
+
  
-    <core-input value="{{url}}"></core-input>
-    <core-ajax id="ajax" auto url="{{requestUrl}}" withCredentials="false" response="{{data}}"
+    <!--<core-input value="{{url}}"></core-input>-->
+
+    <!-- <core-ajax id="ajax" auto url="{{requestUrl}}" withCredentials="false" response="{{data}}"
       params='{"alt":"json", "q":"chrome"}'
       handleAs="json"></core-ajax>
-
+ -->
 
     
     
-     <sortable-table PageSize="10" data="{{tableData}}" class="bootstrap" footerTemplate="defaultPager" showFooter="true">
+     <sortable-table PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
 
     </sortable-table>
  
@@ -44,17 +49,38 @@
   <script>
 
       Polymer('th-enigma', {
-        url:"https://api.enigma.io/v2/stats/iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4/us.gov.whitehouse.visitor-list?select=namefull&operation=frequency",
-        tableData: [],
+        //url:"https://api.enigma.io/v2/stats/"+apiKey+"/"+dataSet+"?select=namefull&operation=frequency",
+        //url: "https://api.enigma.io/v2/stats/iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4/us.gov.whitehouse.visitor-list?select=namefull&operation=frequency",
+        url: '',
+        apiKey: 'iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4',
+        dataSet: 'us.gov.whitehouse.visitor-list',
+        _META_PATH: 'https://api.enigma.io/v2/meta/',
+        _STATS_PATH: 'https://api.enigma.io/v2/stats/',
+        _DATA_PATH: 'https://api.enigma.io/v2/data/',
+
+        tableData: null,
         domReady: function() {
 
           
-          var self = this;
+            var self = this;
 
-            var url = self.url;
+            self.url = "https://api.enigma.io/v2/stats/"+self.apiKey+"/"+self.dataSet+"?select=namefull&operation=frequency";
+
+            self._makeCORSCall(self.url, self._displayReturnedData);
+            
+
+
+
+        },
+        _displayReturnedData: function(data) {
+            var self = this;
+            self.tableData = data.result.frequency;
+
+        },
+        _makeCORSCall: function(url, mycallback) {
+
+            var self = this;
             var method = 'GET';
-
-
             var xhr = new XMLHttpRequest();
             if ("withCredentials" in xhr) {
               xhr.open(method, url, true);
@@ -66,8 +92,6 @@
               xhr = null;
             }
 
-
-
             if (!xhr) {
               alert('CORS not supported');
               return;
@@ -75,7 +99,11 @@
 
             // Response handlers.
             xhr.onload = function() {
-              self.tableData = JSON.parse(xhr.response).result.frequency;
+
+              var data = JSON.parse(xhr.response);
+              mycallback.call(self,data);
+              //self._displayReturnedData(data);
+
             };
 
             xhr.onerror = function() {
@@ -83,34 +111,7 @@
             };
 
             xhr.send();
-
-        
-        /*  
-          
-          var self = this;
-          self.requestUrl = self.url; //self.url.replace(/(ftp|http|https):\/\//,'http://www.corsproxy.com/');
-          console.log(self.requestUrl);
-
-          console.log('go');
-
-          this.$.ajax.go();
-
-          console.log('gone');
-
-          console.log(this.$.ajax);
-          this.$.ajax.addEventListener('polymer-error',function(e) {
-            console.log(e);
-          });
-          this.$.ajax.addEventListener('polymer-response',function(e) {
-            console.log('response');
-            console.log(e.detail.response[0]);
-            console.log(self.data);
-            console.log(self.$.ajax.response);
-          });
-
-        */
-          
-
+            console.log('sent');
         }
 
        
