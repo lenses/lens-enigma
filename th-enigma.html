@@ -5,6 +5,10 @@
 <link rel="import" href="../sortable-table/sortable-table.html">
 
 <link rel="import" href="../core-input/core-input.html">
+<link rel="import" href="../core-selector/core-selector.html">
+<link rel="import" href="../core-collapse/core-collapse.html">
+
+
 
 <link rel="import" href="../core-ajax/core-ajax.html">
 
@@ -16,31 +20,76 @@
         font-size: 12px;
         display: block;
 
-      } 
+      }
+      core-selector {
+        display: inline-block;
+      }
+
+      core-selector .col {
+        padding: 3px;
+        border: 1px solid #ccc;
+      }
+      core-selector .core-selected {
+        background-color: #ccc;
+        border: 1px solid #888;
+
+      }
+
+      sortable-table {
+        float: right;
+        min-width: 200px;
+      }
+
+      .error_msg {
+        font-size: 1.1em;
+        color: red;
+      }
+
+      .numeric {
+        font-size: 0.8em;
+        color: LightSkyBlue;
+      }
       
 
     </style>
     <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
     
-<!--     <polymer-jsonp id="jsonp" auto="true" url="{{url}}" response="{{data}}"></polymer-jsonp>
- -->    
-<!--     <core-ajax id="ajax" auto="true" url="{{url}}" response="{{data}}"></core-ajax>
- -->
-
+<!-- 
     <core-input value="{{apiKey}}"></core-input>
     <core-input value="{{dataSet}}"></core-input>
-
- 
-    <!--<core-input value="{{url}}"></core-input>-->
-
-    <!-- <core-ajax id="ajax" auto url="{{requestUrl}}" withCredentials="false" response="{{data}}"
-      params='{"alt":"json", "q":"chrome"}'
-      handleAs="json"></core-ajax>
  -->
 
+<!--
+    <paper-dropdown-menu selected="{{_selectedCols}}" multi="true">
+      <template repeat="{{colItem in _columns}}" valueattr="label">
+        <paper-item label="{{colItem.id}}">{{colItem.label}}</paper-item>
+      </template>
+
+    </paper-dropdown-menu>
+-->
     
-    
-     <sortable-table PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
+    <template if="{{_errorMsg}}">
+      <div class="error_msg">{{_errorMsg}}</div>
+    </template>
+    <core-selector id="colums_selector" selected="{{_selectedCols}}" valueattr="label">
+        <template repeat="{{colItem in _columns}}">
+          <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
+        </template>
+    </core-selector>
+
+    <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
+          <div class="col" label="frequency">Frequency</div>
+          <div class="col" label="sum">Sum</div>
+          <div class="col" label="avg">Average</div>
+          <div class="col" label="stddev">Standard Deviation</div>
+          <div class="col" label="variance">Variance</div>
+          <div class="col" label="max">Max</div>
+          <div class="col" label="min">Min</div>
+    </core-selector>
+
+    <button on-click="{{queryStatData}}">query data</button>
+
+    <sortable-table id="table" PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
 
     </sortable-table>
  
@@ -53,30 +102,104 @@
         //url: "https://api.enigma.io/v2/stats/iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4/us.gov.whitehouse.visitor-list?select=namefull&operation=frequency",
         url: '',
         apiKey: 'iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4',
-        dataSet: 'us.gov.whitehouse.visitor-list',
-        _META_PATH: 'https://api.enigma.io/v2/meta/',
-        _STATS_PATH: 'https://api.enigma.io/v2/stats/',
-        _DATA_PATH: 'https://api.enigma.io/v2/data/',
+        dataSet: 'us.gov.whitehouse.salaries.2011', //'us.gov.whitehouse.visitor-list',
+        _ENIGMA_API_PATH: 'https://api.enigma.io/v2',
+        _META_PATH: '/meta/',
+        _STATS_PATH: '/stats/',
+        _DATA_PATH: '/data/',
+
+        _columns: [],
+        _selectedCols: [],
+        _selectedFunc: 'frequency',
+        _errorMsg: null,
+
+        chartData: [],
 
         tableData: null,
         domReady: function() {
 
           
-            var self = this;
+          var self = this;
 
-            self.url = "https://api.enigma.io/v2/stats/"+self.apiKey+"/"+self.dataSet+"?select=namefull&operation=frequency";
-
-            self._makeCORSCall(self.url, self._displayReturnedData);
-            
-
-
+          setTimeout(function() {
+           // self.queryStatData();
+          }, 7000);
+          
+          self.queryMetaData();
 
         },
+        queryMetaData: function() {
+
+          var self = this;
+          var url = self._ENIGMA_API_PATH+self._META_PATH+self.apiKey+"/"+self.dataSet+"?select=namefull&operation=frequency";
+          self._makeCORSCall(url, self._displayMetaData);
+
+        },
+        queryStatData: function() {
+
+
+          var self = this;
+          var url = self._ENIGMA_API_PATH+self._STATS_PATH+self.apiKey+
+                    "/"+self.dataSet+
+                    "?select="+self._selectedCols+
+                    "&operation="+self._selectedFunc;
+          console.log(url);
+          self._makeCORSCall(url, self._displayReturnedData);
+
+        },
+
         _displayReturnedData: function(data) {
             var self = this;
-            self.tableData = data.result.frequency;
+            if(data.success) {
+             console.log(data);
+             console.log('data.success', data.success);
+             console.log('data.result', data.result);
+             self.tableData = [];
+             self.$.table.columns = [];
+             if(data.result.frequency) {
+                self.tableData = data.result.frequency;
+             }
+             else {
+                for(key in data.result) {
+                  if(key!='success') {
+                    self.tableData = [{'column': data.info.column.label , key :data.result[key]}];
+                  }
+                }
+
+             }
+            
+             self._errorMsg = null;
+            }
+            else {
+              self._errorMsg = data.info.additional;
+            }
+
+            // should be its own component...
+            self._createChartData(data);
+
+            //console.log(self.tableData);
 
         },
+        _displayMetaData: function(data) {
+            var self = this;
+            console.log(data);
+            self._columns = data.result.columns;
+            
+
+        },
+        _createChartData: function(data) {
+          var self = this;
+          var tmp = self.tableData;
+          tmp = tpm.slice(0,5);
+          var ret = tmp.map(function(item) {
+
+              return {label: data.info.column.id+' '+item[data.info.column.id] , value: item.count };
+          });
+          console.log(ret);
+          return ret;
+
+        },
+
         _makeCORSCall: function(url, mycallback) {
 
             var self = this;
@@ -111,7 +234,12 @@
             };
 
             xhr.send();
-            console.log('sent');
+            console.log('request sent');
+        },
+
+        _openColCollapse: function() {
+          console.log('collapse');
+          //this.$.col_collapse.toggle();
         }
 
        
