@@ -4,6 +4,15 @@
     This code may only be used under the MIT license found at http://thelmanews.github.io/LICENSE.txt
     The complete set of authors may be found at http://thelmanews.github.io//AUTHORS.txt
     The complete set of contributors may be found at http://thelmanews.github.io/CONTRIBUTORS.txt
+
+    For running demo:
+
+    bower install  https://github.com/thelmanews/th-n-bar-chart-horizontal.git
+    and 
+    bower install https://github.com/thelmanews/th-connector.git
+
+    in addition to bower.json dependencies
+
 -->
 <!doctype html>
 <html>
@@ -13,14 +22,23 @@
 
   <script src="../platform/platform.js"></script>
   <link rel="import" href="th-enigma.html">
+  <link rel="import" href="../th-connector/th-connector.html">
+  <link rel="import" href="../th-n-bar-chart-horizontal/th-n-bar-chart-horizontal.html">
 
 </head>
 <body unresolved>
 
   <p>An example of using <code>&lt;th-enigma></code>:</p>
 
-    <th-enigma style="width: 600px;"></th-enigma>
 
+    <th-connector>
+
+      <th-enigma style="width: 600px;"></th-enigma>
+
+      <th-n-bar-chart-horizontal animateOnInit="true"></th-n-bar-chart-horizontal>
+
+
+    </th-connector>
 
    
 </body>

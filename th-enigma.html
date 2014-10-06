@@ -13,7 +13,7 @@
 <link rel="import" href="../core-ajax/core-ajax.html">
 
 
-<polymer-element name="th-enigma" attributes="url">
+<polymer-element name="th-enigma" attributes="url chartData">
   <template>
     <style>
       :host{
@@ -113,7 +113,11 @@
         _selectedFunc: 'frequency',
         _errorMsg: null,
 
-        chartData: [],
+        //chartData: [],
+
+        publish: {
+          chartData: [],
+        },
 
         tableData: null,
         domReady: function() {
@@ -190,13 +194,13 @@
         _createChartData: function(data) {
           var self = this;
           var tmp = self.tableData;
-          tmp = tpm.slice(0,5);
+          tmp = tmp.slice(0,5);
           var ret = tmp.map(function(item) {
 
-              return {label: data.info.column.id+' '+item[data.info.column.id] , value: item.count };
+              return {label: data.info.column.id+' '+item[data.info.column.id] , value: parseFloat(item.count) };
           });
           console.log(ret);
-          return ret;
+          self.chartData = ret;
 
         },
 

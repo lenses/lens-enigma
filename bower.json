@@ -6,7 +6,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#0.3.4",
     "sortable-table": "~0.9.1",
-    "polymer-jsonp": "PolymerLabs/polymer-jsonp#~0.3.0",
-    "core-input": "Polymer/core-input#~0.4.1"
+    "core-input": "Polymer/core-input#~0.4.1",
+    "core-selector": "Polymer/core-selector#~0.4.1",
+    "core-collapse": "Polymer/core-collapse#~0.4.1"
   }
 }
