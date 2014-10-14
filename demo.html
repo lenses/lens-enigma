@@ -22,23 +22,54 @@
 
   <script src="../platform/platform.js"></script>
   <link rel="import" href="th-enigma.html">
+
   <link rel="import" href="../th-connector/th-connector.html">
+  <link rel="import" href="../th-chart-editor/th-chart-editor.html">
+  <link rel="import" href="../th-chart-data-filter/th-chart-data-filter.html">
   <link rel="import" href="../th-n-bar-chart-horizontal/th-n-bar-chart-horizontal.html">
+  <link rel="import" href="../th-map-us/th-map-us.html">
+
+    <script>
+
+        document.addEventListener('polymer-ready', function() {
+
+
+
+          var connector = document.querySelector('th-connector');
+          var enigma =  document.querySelector('th-enigma');
+          var chart =  document.querySelector('th-n-bar-chart-horizontal');
+          var filter =  document.querySelector('th-chart-data-filter');
+          var map =  document.querySelector('th-map-us');
+
+          connector.connectAttributes(enigma, 'tableData', filter, 'dataInput');
+          //connector.connectAttributes(filter, 'chartDataOut', chart, 'chartData');
+
+          connector.connectAttributes(filter, 'chartDataOut', map, 'chartData');
+
+        });
+    </script>
+
 
 </head>
 <body unresolved>
 
-  <p>An example of using <code>&lt;th-enigma></code>:</p>
 
 
     <th-connector>
 
       <th-enigma style="width: 600px;"></th-enigma>
 
-      <th-n-bar-chart-horizontal animateOnInit="true"></th-n-bar-chart-horizontal>
+      <th-chart-data-filter></th-chart-data-filter>
+
+      <th-n-bar-chart-horizontal animateOnInit="true" chartHeight="400" chartWidth="300">
+        <th-chart-editor></th-chart-editor>
+      </th-n-bar-chart-horizontal>
+
+      <th-map-us animateOnInit="true" chartWidth="400"></th-map-us>
 
 
     </th-connector>
+
 
    
 </body>

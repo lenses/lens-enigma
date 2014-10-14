@@ -13,7 +13,7 @@
 <link rel="import" href="../core-ajax/core-ajax.html">
 
 
-<polymer-element name="th-enigma" attributes="url chartData">
+<polymer-element name="th-enigma" attributes="url tableData">
   <template>
     <style>
       :host{
@@ -36,8 +36,9 @@
       }
 
       sortable-table {
-        float: right;
+        
         min-width: 200px;
+        display: inline-block !important;
       }
 
       .error_msg {
@@ -49,6 +50,12 @@
         font-size: 0.8em;
         color: LightSkyBlue;
       }
+
+      #query_data {
+        vertical-align: top;
+
+      }
+      
       
 
     </style>
@@ -67,7 +74,6 @@
 
     </paper-dropdown-menu>
 -->
-    
     <template if="{{_errorMsg}}">
       <div class="error_msg">{{_errorMsg}}</div>
     </template>
@@ -87,13 +93,14 @@
           <div class="col" label="min">Min</div>
     </core-selector>
 
-    <button on-click="{{queryStatData}}">query data</button>
+    <button id="query_data" on-click="{{queryStatData}}">query data</button>
 
     <sortable-table id="table" PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
 
     </sortable-table>
  
   </template>
+
 
   <script>
 
@@ -102,7 +109,7 @@
         //url: "https://api.enigma.io/v2/stats/iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4/us.gov.whitehouse.visitor-list?select=namefull&operation=frequency",
         url: '',
         apiKey: 'iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4',
-        dataSet: 'us.gov.whitehouse.salaries.2011', //'us.gov.whitehouse.visitor-list',
+        dataSet: 'us.gov.atf.federal-firearms-licenses.complete-listing',//'us.gov.whitehouse.salaries.2011', //'us.gov.whitehouse.visitor-list',
         _ENIGMA_API_PATH: 'https://api.enigma.io/v2',
         _META_PATH: '/meta/',
         _STATS_PATH: '/stats/',
@@ -112,12 +119,6 @@
         _selectedCols: [],
         _selectedFunc: 'frequency',
         _errorMsg: null,
-
-        //chartData: [],
-
-        publish: {
-          chartData: [],
-        },
 
         tableData: null,
         domReady: function() {
@@ -179,7 +180,7 @@
             }
 
             // should be its own component...
-            self._createChartData(data);
+            //self._createChartData(data);
 
             //console.log(self.tableData);
 
@@ -189,18 +190,6 @@
             console.log(data);
             self._columns = data.result.columns;
             
-
-        },
-        _createChartData: function(data) {
-          var self = this;
-          var tmp = self.tableData;
-          tmp = tmp.slice(0,5);
-          var ret = tmp.map(function(item) {
-
-              return {label: data.info.column.id+' '+item[data.info.column.id] , value: parseFloat(item.count) };
-          });
-          console.log(ret);
-          self.chartData = ret;
 
         },
 
