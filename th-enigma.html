@@ -13,7 +13,7 @@
 <link rel="import" href="../core-ajax/core-ajax.html">
 
 
-<polymer-element name="th-enigma" attributes="url tableData">
+<polymer-element name="th-enigma" attributes="url tableData apiKey dataSet">
   <template>
     <style>
       :host{
@@ -23,6 +23,8 @@
       }
       core-selector {
         display: inline-block;
+        vertical-align: top;
+
       }
 
       core-selector .col {
@@ -55,16 +57,28 @@
         vertical-align: top;
 
       }
+
+      core-input {
+        border: 1px solid #eee;
+        padding: 2px;
+      }
+
+      .selection {
+        display: inline-block;
+        position: relative;
+        width: 150px;
+      }
       
       
 
     </style>
     <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
     
-<!-- 
+    <label>API Key</label> 
     <core-input value="{{apiKey}}"></core-input>
+    <label>Dataset</label>
     <core-input value="{{dataSet}}"></core-input>
- -->
+ 
 
 <!--
     <paper-dropdown-menu selected="{{_selectedCols}}" multi="true">
@@ -77,21 +91,27 @@
     <template if="{{_errorMsg}}">
       <div class="error_msg">{{_errorMsg}}</div>
     </template>
-    <core-selector id="colums_selector" selected="{{_selectedCols}}" valueattr="label">
-        <template repeat="{{colItem in _columns}}">
-          <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
-        </template>
-    </core-selector>
+    <div class="selection">
+      <label for="columns_selector">Select column:</label>
+      <core-selector id="columns_selector" selected="{{_selectedCols}}" valueattr="label">
+          <template repeat="{{colItem in _columns}}">
+            <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
+          </template>
+      </core-selector>
+    </div>
 
-    <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
-          <div class="col" label="frequency">Frequency</div>
-          <div class="col" label="sum">Sum</div>
-          <div class="col" label="avg">Average</div>
-          <div class="col" label="stddev">Standard Deviation</div>
-          <div class="col" label="variance">Variance</div>
-          <div class="col" label="max">Max</div>
-          <div class="col" label="min">Min</div>
-    </core-selector>
+    <div class="selection">
+      <label for="func_selector">Select function:</label>
+      <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
+            <div class="col" label="frequency">Frequency</div>
+            <div class="col" label="sum">Sum</div>
+            <div class="col" label="avg">Average</div>
+            <div class="col" label="stddev">Standard Deviation</div>
+            <div class="col" label="variance">Variance</div>
+            <div class="col" label="max">Max</div>
+            <div class="col" label="min">Min</div>
+      </core-selector>
+    </div>
 
     <button id="query_data" on-click="{{queryStatData}}">query data</button>
 
@@ -132,6 +152,9 @@
           
           self.queryMetaData();
 
+        },
+        dataSetChanged: function() {
+          this.queryMetaData();
         },
         queryMetaData: function() {
 
