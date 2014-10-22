@@ -19,6 +19,7 @@
       :host{
         font-size: 12px;
         display: block;
+        font-family: open-sans, sans-serif;
 
       }
       core-selector {
@@ -38,7 +39,7 @@
       }
 
       sortable-table {
-        
+        vertical-align: top;
         min-width: 200px;
         display: inline-block !important;
       }
@@ -54,7 +55,13 @@
       }
 
       #query_data {
-        vertical-align: top;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #2fa3af;
+        color: #EEE;
+        border: 1px solid #AAA;
+        
 
       }
 
@@ -66,54 +73,89 @@
       .selection {
         display: inline-block;
         position: relative;
-        width: 150px;
+        width: 140px;
       }
+
+      .controls {
+        width: 300px;
+        display: inline-block;
+      }
+
+      .long-input {
+        width: 240px;
+        float: right;
+      }
+      .row {
+        display: block;
+
+      }
+      label {
+        color: #2fa3af
+      }
+      .row label {
+        height: 15px;
+        margin-top: 5px;
+        display: inline-block;
+      }
+
       
       
 
     </style>
     <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
-    
-    <label>API Key</label> 
-    <core-input value="{{apiKey}}"></core-input>
-    <label>Dataset</label>
-    <core-input value="{{dataSet}}"></core-input>
- 
 
-<!--
-    <paper-dropdown-menu selected="{{_selectedCols}}" multi="true">
-      <template repeat="{{colItem in _columns}}" valueattr="label">
-        <paper-item label="{{colItem.id}}">{{colItem.label}}</paper-item>
+    <div class="controls">
+      <div class="row">
+        <label>API Key:</label> 
+        <core-input class="long-input" value="{{apiKey}}"></core-input>
+      </div>
+      <div class="row"> 
+        <label>Dataset:</label>
+        <core-input class="long-input" value="{{dataSet}}"></core-input>
+      </div>
+
+
+   
+
+  <!--
+      <paper-dropdown-menu selected="{{_selectedCols}}" multi="true">
+        <template repeat="{{colItem in _columns}}" valueattr="label">
+          <paper-item label="{{colItem.id}}">{{colItem.label}}</paper-item>
+        </template>
+
+      </paper-dropdown-menu>
+  -->
+      <template if="{{_errorMsg}}">
+        <div class="error_msg">{{_errorMsg}}</div>
       </template>
+      <div class="selection">
+        <label for="columns_selector">Select column:</label>
+        <core-selector id="columns_selector" selected="{{_selectedCols}}" valueattr="label">
+            <template repeat="{{colItem in _columns}}">
+              <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
+            </template>
+        </core-selector>
+      </div>
 
-    </paper-dropdown-menu>
--->
-    <template if="{{_errorMsg}}">
-      <div class="error_msg">{{_errorMsg}}</div>
-    </template>
-    <div class="selection">
-      <label for="columns_selector">Select column:</label>
-      <core-selector id="columns_selector" selected="{{_selectedCols}}" valueattr="label">
-          <template repeat="{{colItem in _columns}}">
-            <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
-          </template>
-      </core-selector>
-    </div>
+      <div class="selection">
+        <label for="func_selector">Select function:</label>
+        <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
+              <div class="col" label="frequency">Frequency</div>
+              <div class="col" label="sum">Sum</div>
+              <div class="col" label="avg">Average</div>
+              <div class="col" label="stddev">Standard Deviation</div>
+              <div class="col" label="variance">Variance</div>
+              <div class="col" label="max">Max</div>
+              <div class="col" label="min">Min</div>
+        </core-selector>
+      </div>
+      <button id="query_data" on-click="{{queryStatData}}">query data</button>
 
-    <div class="selection">
-      <label for="func_selector">Select function:</label>
-      <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
-            <div class="col" label="frequency">Frequency</div>
-            <div class="col" label="sum">Sum</div>
-            <div class="col" label="avg">Average</div>
-            <div class="col" label="stddev">Standard Deviation</div>
-            <div class="col" label="variance">Variance</div>
-            <div class="col" label="max">Max</div>
-            <div class="col" label="min">Min</div>
-      </core-selector>
-    </div>
+    </div> <!-- controls -->
 
-    <button id="query_data" on-click="{{queryStatData}}">query data</button>
+
+
+
 
     <sortable-table id="table" PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
 
