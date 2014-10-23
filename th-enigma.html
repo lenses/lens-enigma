@@ -1,7 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="../polymer-ui-accordion/polymer-ui-accordion.html">
-<link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
 <link rel="import" href="../sortable-table/sortable-table.html">
 
 <link rel="import" href="../core-input/core-input.html">
@@ -9,8 +7,7 @@
 <link rel="import" href="../core-collapse/core-collapse.html">
 
 
-
-<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
 <polymer-element name="th-enigma" attributes="url tableData apiKey dataSet">
@@ -20,6 +17,7 @@
         font-size: 12px;
         display: block;
         font-family: open-sans, sans-serif;
+        position: relative;
 
       }
       core-selector {
@@ -78,7 +76,10 @@
 
       .controls {
         width: 300px;
+        /*position: absolute;*/
         display: inline-block;
+        z-index: 100;
+        background-color: rgba(255,255,255,0.9);
       }
 
       .long-input {
@@ -98,68 +99,86 @@
         display: inline-block;
       }
 
+      .disabled {
+        color: #EEE;
+      }
+
+      .elTitle {
+        color: #2fa3af;
+        padding: 2px;
+      }
+
+
       
       
 
     </style>
     <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
+    <span class="elTitle">th-enigma</span>
 
-    <div class="controls">
-      <div class="row">
-        <label>API Key:</label> 
-        <core-input class="long-input" value="{{apiKey}}"></core-input>
-      </div>
-      <div class="row"> 
-        <label>Dataset:</label>
-        <core-input class="long-input" value="{{dataSet}}"></core-input>
-      </div>
+    <core-icon-button icon="perm-data-setting" on-click="{{showControls}}"></core-icon-button>
+    <core-icon-button icon="view-list" on-click="{{showResults}}" class="{{ {disabled: !hasData} | tokenList}}"></core-icon-button>
+
+    <core-collapse id="ctrl_collapse">
+        <div class="controls">
+          <div class="row">
+            <label>API Key:</label> 
+            <core-input class="long-input" value="{{apiKey}}"></core-input>
+          </div>
+          <div class="row"> 
+            <label>Dataset:</label>
+            <core-input class="long-input" value="{{dataSet}}"></core-input>
+          </div>
 
 
-   
+       
 
-  <!--
-      <paper-dropdown-menu selected="{{_selectedCols}}" multi="true">
-        <template repeat="{{colItem in _columns}}" valueattr="label">
-          <paper-item label="{{colItem.id}}">{{colItem.label}}</paper-item>
-        </template>
-
-      </paper-dropdown-menu>
-  -->
-      <template if="{{_errorMsg}}">
-        <div class="error_msg">{{_errorMsg}}</div>
-      </template>
-      <div class="selection">
-        <label for="columns_selector">Select column:</label>
-        <core-selector id="columns_selector" selected="{{_selectedCols}}" valueattr="label">
-            <template repeat="{{colItem in _columns}}">
-              <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
+      <!--
+          <paper-dropdown-menu selected="{{_selectedCols}}" multi="true">
+            <template repeat="{{colItem in _columns}}" valueattr="label">
+              <paper-item label="{{colItem.id}}">{{colItem.label}}</paper-item>
             </template>
-        </core-selector>
-      </div>
 
-      <div class="selection">
-        <label for="func_selector">Select function:</label>
-        <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
-              <div class="col" label="frequency">Frequency</div>
-              <div class="col" label="sum">Sum</div>
-              <div class="col" label="avg">Average</div>
-              <div class="col" label="stddev">Standard Deviation</div>
-              <div class="col" label="variance">Variance</div>
-              <div class="col" label="max">Max</div>
-              <div class="col" label="min">Min</div>
-        </core-selector>
-      </div>
-      <button id="query_data" on-click="{{queryStatData}}">query data</button>
+          </paper-dropdown-menu>
+      -->
+          <template if="{{_errorMsg}}">
+            <div class="error_msg">{{_errorMsg}}</div>
+          </template>
+          <div class="selection">
+            <label for="columns_selector">Select column:</label>
+            <core-selector id="columns_selector" selected="{{_selectedCols}}" valueattr="label">
+                <template repeat="{{colItem in _columns}}">
+                  <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
+                </template>
+            </core-selector>
+          </div>
 
-    </div> <!-- controls -->
+          <div class="selection">
+            <label for="func_selector">Select function:</label>
+            <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
+                  <div class="col" label="frequency">Frequency</div>
+                  <div class="col" label="sum">Sum</div>
+                  <div class="col" label="avg">Average</div>
+                  <div class="col" label="stddev">Standard Deviation</div>
+                  <div class="col" label="variance">Variance</div>
+                  <div class="col" label="max">Max</div>
+                  <div class="col" label="min">Min</div>
+            </core-selector>
+          </div>
+          <button id="query_data" on-click="{{queryStatData}}">query data</button>
+
+        </div> <!-- controls -->
 
 
+  </core-collapse>
+  <core-collapse id="results_collapse">
 
 
 
     <sortable-table id="table" PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
 
     </sortable-table>
+  </core-collapse>
  
   </template>
 
@@ -181,6 +200,8 @@
         _selectedCols: [],
         _selectedFunc: 'frequency',
         _errorMsg: null,
+        hasData: false,
+
 
         tableData: null,
         domReady: function() {
@@ -221,6 +242,7 @@
         _displayReturnedData: function(data) {
             var self = this;
             if(data.success) {
+             self.hasData = true;
              console.log(data);
              console.log('data.success', data.success);
              console.log('data.result', data.result);
@@ -241,6 +263,7 @@
              self._errorMsg = null;
             }
             else {
+              self.hasData = false;
               self._errorMsg = data.info.additional;
             }
 
@@ -298,7 +321,20 @@
         _openColCollapse: function() {
           console.log('collapse');
           //this.$.col_collapse.toggle();
-        }
+        },
+        
+        showResults: function(e) {
+          if(this.hasData) {
+            if(this.$.ctrl_collapse.opened && !this.$.results_collapse.opened) {
+              this.$.ctrl_collapse.toggle();
+            }
+            this.$.results_collapse.toggle();
+          }
+        }, 
+
+        showControls: function(e) {
+          this.$.ctrl_collapse.toggle();
+        } 
 
        
 
