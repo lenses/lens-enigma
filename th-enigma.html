@@ -15,7 +15,8 @@
     <style>
       :host{
         font-size: 12px;
-        display: block;
+        display: inline-flex !important;
+        align-items: flex-start;
         font-family: open-sans, sans-serif;
         position: relative;
 
@@ -106,6 +107,10 @@
       .elTitle {
         color: #2fa3af;
         padding: 2px;
+      }
+
+      core-collapse {
+        display: inline-block;
       }
 
 
@@ -325,9 +330,9 @@
         
         showResults: function(e) {
           if(this.hasData) {
-            if(this.$.ctrl_collapse.opened && !this.$.results_collapse.opened) {
-              this.$.ctrl_collapse.toggle();
-            }
+            // if(this.$.ctrl_collapse.opened && !this.$.results_collapse.opened) {
+            //   this.$.ctrl_collapse.toggle();
+            // }
             this.$.results_collapse.toggle();
           }
         }, 
