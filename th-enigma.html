@@ -10,7 +10,7 @@
 <link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
-<polymer-element name="th-enigma" attributes="url tableData apiKey dataSet">
+<polymer-element name="th-enigma" attributes="url output apiKey dataSet">
   <template>
     <style>
       :host{
@@ -180,7 +180,7 @@
 
 
 
-    <sortable-table id="table" PageSize="10" data="{{tableData}}" class="bootstrap" showFooter="true">
+    <sortable-table id="table" PageSize="10" data="{{output}}" class="bootstrap" showFooter="true">
 
     </sortable-table>
   </core-collapse>
@@ -208,7 +208,7 @@
         hasData: false,
 
 
-        tableData: null,
+        output: null,
         domReady: function() {
 
           
@@ -251,15 +251,15 @@
              console.log(data);
              console.log('data.success', data.success);
              console.log('data.result', data.result);
-             self.tableData = [];
+             self.output = [];
              self.$.table.columns = [];
              if(data.result.frequency) {
-                self.tableData = data.result.frequency;
+                self.output = data.result.frequency;
              }
              else {
                 for(key in data.result) {
                   if(key!='success') {
-                    self.tableData = [{'column': data.info.column.label , key :data.result[key]}];
+                    self.output = [{'column': data.info.column.label , key :data.result[key]}];
                   }
                 }
 
@@ -275,7 +275,7 @@
             // should be its own component...
             //self._createChartData(data);
 
-            //console.log(self.tableData);
+            //console.log(self.output);
 
         },
         _displayMetaData: function(data) {
@@ -339,7 +339,11 @@
 
         showControls: function(e) {
           this.$.ctrl_collapse.toggle();
-        } 
+        } , 
+        outputChanged: function(){
+          console.log("th-enigma output changed");
+          this.fire('th-output-changed', this);
+        }
 
        
 
