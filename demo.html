@@ -26,8 +26,10 @@
   <link rel="import" href="../th-connector/th-connector.html">
   <link rel="import" href="../th-chart-editor/th-chart-editor.html">
   <link rel="import" href="../th-chart-data-filter/th-chart-data-filter.html">
-  <link rel="import" href="../th-n-bar-chart-horizontal/th-n-bar-chart-horizontal.html">
+  <link rel="import" href="../th-n-bar-chart/th-n-bar-chart.html">
   <link rel="import" href="../th-map-us/th-map-us.html">
+  <link rel="import" href="../th-array-function/th-array-function.html">
+  <link rel="import" href="../th-csv/th-csv.html">
 
     <script>
 
@@ -50,6 +52,12 @@
     </script>
 
     <style>
+      body {
+        width: 1500px;
+      }
+      th-map-us {
+        background-color: #303B49;
+      }
 
     </style>
 
@@ -65,12 +73,19 @@
 
       <th-chart-data-filter></th-chart-data-filter>
 
-      <th-n-bar-chart-horizontal animateOnInit="true" chartHeight="400" chartWidth="300">
-        <th-chart-editor></th-chart-editor>
-      </th-n-bar-chart-horizontal>
+      <br>
 
+       
+      
       <th-map-us animateOnInit="true" chartWidth="400"></th-map-us>
+      
+      <th-n-bar-chart animateOnInit="true" chartHeight="400" chartWidth="700"> </th-n-bar-chart>
 
+      <br>
+
+      <th-array-function></th-array-function>
+
+      <th-csv></th-csv>
 
     </th-connector>
 
