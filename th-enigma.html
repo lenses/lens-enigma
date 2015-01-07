@@ -116,7 +116,6 @@
 
     </style>
     <link rel="stylesheet" href="../sortable-table/css/bootstrap.css" shim-shadowdom>
-    <span class="elTitle">th-enigma</span>
 
     <core-icon-button icon="perm-data-setting" on-click="{{showControls}}"></core-icon-button>
     <core-icon-button icon="view-list" on-click="{{showResults}}" class="{{ {disabled: !hasData} | tokenList}}"></core-icon-button>
@@ -125,11 +124,11 @@
         <div class="controls">
           <div class="row">
             <label>API Key:</label> 
-            <core-input class="long-input" value="{{apiKey}}"></core-input>
+            <input is="core-input" class="long-input" value="{{apiKey}}">
           </div>
           <div class="row"> 
             <label>Dataset:</label>
-            <core-input class="long-input" value="{{dataSet}}"></core-input>
+            <input is="core-input" class="long-input" value="{{dataSet}}">
           </div>
 
 
