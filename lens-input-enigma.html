@@ -6,7 +6,7 @@
 <link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
-<polymer-element name="th-enigma" extends="th-animated" attributes="url output apiKey dataSet">
+<polymer-element name="lens-input-enigma" extends="th-animated" attributes="url output apiKey dataSet">
   <template>
     <style>
       :host{
@@ -169,7 +169,7 @@
 
   <script>
 
-      Polymer('th-enigma', {
+      Polymer('lens-input-enigma', {
         //url:"https://api.enigma.io/v2/stats/"+apiKey+"/"+dataSet+"?select=namefull&operation=frequency",
         //url: "https://api.enigma.io/v2/stats/iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4/us.gov.whitehouse.visitor-list?select=namefull&operation=frequency",
         url: '',
@@ -330,7 +330,7 @@
           this.$.ctrl_collapse.toggle();
         } , 
         outputChanged: function(){
-          console.log("th-enigma output changed");
+          console.log("lens-input-enigma output changed");
           this.fire('th-output-changed', this);
         }
 

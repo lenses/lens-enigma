@@ -1,17 +1,9 @@
 <!--
     @license
-    Copyright (c) 2014 Thelma Project Authors. All rights reserved.
-    This code may only be used under the MIT license found at http://thelmanews.github.io/LICENSE.txt
-    The complete set of authors may be found at http://thelmanews.github.io//AUTHORS.txt
-    The complete set of contributors may be found at http://thelmanews.github.io/CONTRIBUTORS.txt
-
-    For running demo:
-
-    bower install  https://github.com/thelmanews/th-n-bar-chart-horizontal.git
-    and 
-    bower install https://github.com/thelmanews/th-connector.git
-
-    in addition to bower.json dependencies
+    Copyright (c) 2014 Lenses Project Authors. All rights reserved.
+    This code may only be used under the MIT license found at http://lenses.github.io/LICENSE.txt
+    The complete set of authors may be found at http://lenses.github.io//AUTHORS.txt
+    The complete set of contributors may be found at http://lenses.github.io/CONTRIBUTORS.txt
 
 -->
 <!doctype html>
@@ -21,7 +13,7 @@
   <title>th-editor Demo</title>
 
   <script src="../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="th-enigma.html">
+  <link rel="import" href="lens-input-enigma.html">
 
   <link rel="import" href="../th-connector/th-connector.html">
   <link rel="import" href="../th-chart-editor/th-chart-editor.html">
@@ -38,7 +30,7 @@
 
 
           var connector = document.querySelector('th-connector');
-          var enigma =  document.querySelector('th-enigma');
+          var enigma =  document.querySelector('lens-input-enigma');
           var chart =  document.querySelector('th-n-bar-chart-horizontal');
           var filter =  document.querySelector('th-chart-data-filter');
           var map =  document.querySelector('th-map-us');
@@ -69,7 +61,7 @@
 
     <th-connector>
 
-      <th-enigma id="enigma"></th-enigma>
+      <lens-input-enigma id="enigma"></lens-input-enigma>
 
       <th-chart-data-filter></th-chart-data-filter>
 
