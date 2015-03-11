@@ -21,7 +21,7 @@
   <title>th-editor Demo</title>
 
   <script src="../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="th-enigma.html">
+  <link rel="import" href="lens-input-enigma.html">
 
   <link rel="import" href="../th-connector/th-connector.html">
   <link rel="import" href="../th-chart-editor/th-chart-editor.html">
@@ -38,7 +38,7 @@
 
 
           var connector = document.querySelector('th-connector');
-          var enigma =  document.querySelector('th-enigma');
+          var enigma =  document.querySelector('lens-input-enigma');
           var chart =  document.querySelector('th-n-bar-chart-horizontal');
           var filter =  document.querySelector('th-chart-data-filter');
           var map =  document.querySelector('th-map-us');
@@ -69,7 +69,7 @@
 
     <th-connector>
 
-      <th-enigma id="enigma"></th-enigma>
+      <lens-input-enigma id="enigma"></lens-input-enigma>
 
       <th-chart-data-filter></th-chart-data-filter>
 
