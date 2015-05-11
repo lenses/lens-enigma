@@ -2,8 +2,6 @@
 <link rel="import" href="../th-animated/th-animated.html">
 <link rel="import" href="../core-input/core-input.html">
 <link rel="import" href="../core-selector/core-selector.html">
-<link rel="import" href="../core-collapse/core-collapse.html">
-<link rel="import" href="../core-icon-button/core-icon-button.html">
 
 
 <polymer-element name="lens-input-enigma" extends="th-animated" attributes="url output apiKey dataSet">
@@ -99,19 +97,11 @@
         padding: 2px;
       }
 
-      core-collapse {
-        display: inline-block;
-      }
-
-
-      
       
 
     </style>
 
-    <core-icon-button icon="perm-data-setting" on-click="{{showControls}}"></core-icon-button>
 
-    <core-collapse id="ctrl_collapse">
         <div class="controls">
           <div class="row">
             <label>API Key:</label> 
@@ -162,7 +152,6 @@
         </div> <!-- controls -->
 
 
-  </core-collapse>
  
   </template>
 
@@ -326,9 +315,6 @@
             console.log('request sent');
         },
 
-        showControls: function(e) {
-          this.$.ctrl_collapse.toggle();
-        } , 
         outputChanged: function(){
           console.log("lens-input-enigma output changed");
           this.fire('th-output-changed', this);
