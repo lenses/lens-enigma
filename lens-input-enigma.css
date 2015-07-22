@@ -1,0 +1,88 @@
+:host{
+  font-size: 12px;
+  display: inline-flex !important;
+  align-items: flex-start;
+  font-family: open-sans, sans-serif;
+  position: relative;
+
+}
+iron-selector {
+  display: inline-block;
+  vertical-align: top;
+
+}
+
+iron-selector .col {
+  padding: 3px;
+  border: 1px solid #ccc;
+}
+iron-selector .iron-selected {
+  background-color: #ccc;
+  border: 1px solid #888;
+
+}
+
+.error_msg {
+  font-size: 1.1em;
+  color: red;
+}
+
+.numeric {
+  font-size: 0.8em;
+  color: LightSkyBlue;
+}
+
+#query_data {
+  position: relative;
+  top: -230px;
+  left: 230px;
+  background-color: #2fa3af;
+  color: #EEE;
+  border: 1px solid #AAA;
+}
+
+iron-input {
+  border: 1px solid #eee;
+  padding: 2px;
+  width:20px;
+}
+
+.selection {
+  display: inline-block;
+  position: relative;
+  width: 140px;
+}
+
+.controls {
+  width: 300px;
+  /*position: absolute;*/
+  display: inline-block;
+  z-index: 100;
+  background-color: rgba(255,255,255,0.9);
+}
+
+.long-input {
+  width: 240px;
+  float: right;
+}
+.row {
+  display: block;
+
+}
+label {
+  color: #2fa3af
+}
+.row label {
+  height: 15px;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.disabled {
+  color: #EEE;
+}
+
+.elTitle {
+  color: #2fa3af;
+  padding: 2px;
+}

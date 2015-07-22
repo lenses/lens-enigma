@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>lens-input-enigma Demo</title>
 
-    <script src="../webcomponentsjs/webcomponents.js"></script>
-    <link rel="import" href="lens-input-enigma.html">
+    <script src="../../webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="../lens-input-enigma.html">
 
     <style>
       body {
@@ -62,24 +62,16 @@
   </head>
   <body unresolved>
 
-    <template id="auto-bind-demo" is="auto-binding">
-      <script>
-
-      PolymerExpressions.prototype.json = function(object) {
-        return JSON.stringify(object, undefined, 2);
-      };
-      </script>
-
       <p> lens-input-enigma loads data from the <a href="http://enigma.io">Enigma</a> public data API.</p>
 
       <section class="component">
         <label>Component:</label><br/>
-          <lens-input-enigma id="component" output="{{myoutput}}"></lens-input-enigma>
+          <lens-input-enigma id="component"></lens-input-enigma>
       </section>
 
       <section>
-        <label>CSV Output:</label><span class="count">{{myoutput.length}} records</span>
-        <pre>{{myoutput | json}}</pre>
+        <label>CSV Output:</label><span class="count"></span>
+        <pre></pre>
       </section>
 
       <script>

@@ -1,154 +1,66 @@
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-input/core-input.html">
-<link rel="import" href="../core-selector/core-selector.html">
+<link rel='import' href='../polymer/polymer.html'>
+<link rel='import' href='../iron-input/iron-input.html'>
+<link rel='import' href='../iron-selector/iron-selector.html'>
 
 <!--
-An input component that imports data from <a href="http://enigma.io">Enigma</a>
+An input component that imports data from <a href='http://enigma.io'>Enigma</a>
 
 
 ##### Example
 
-    <lens-input-enigma apiKey="YOURAPIKEY" dataSet='us.gov.whitehouse.visitor-list'></lens-input-enigma>
+    <lens-input-enigma apiKey='YOURAPIKEY' dataSet='us.gov.whitehouse.visitor-list'></lens-input-enigma>
 
-@element lens-input-enigma
-@group Lenses input component
-@blurb An input component that imports data from Enigma.io.
-@status alpha
 @homepage http://lenses.github.io/lens-input-enigma
+@demo
 -->
 
-<polymer-element name="lens-input-enigma" extends="th-animated" attributes="url output apiKey dataSet">
+<dom-module name='lens-input-enigma' attributes='url output apiKey dataSet'>
+
   <template>
-    <style>
-      :host{
-        font-size: 12px;
-        display: inline-flex !important;
-        align-items: flex-start;
-        font-family: open-sans, sans-serif;
-        position: relative;
+    <link rel='stylesheet' href='lens-input-enigma.css'>
 
-      }
-      core-selector {
-        display: inline-block;
-        vertical-align: top;
+      <div class='lens-container lens-input'>
 
-      }
-
-      core-selector .col {
-        padding: 3px;
-        border: 1px solid #ccc;
-      }
-      core-selector .core-selected {
-        background-color: #ccc;
-        border: 1px solid #888;
-
-      }
-
-      .error_msg {
-        font-size: 1.1em;
-        color: red;
-      }
-
-      .numeric {
-        font-size: 0.8em;
-        color: LightSkyBlue;
-      }
-
-      #query_data {
-        position: relative;
-        top: -230px;
-        left: 230px;
-        background-color: #2fa3af;
-        color: #EEE;
-        border: 1px solid #AAA;
-      }
-
-      core-input {
-        border: 1px solid #eee;
-        padding: 2px;
-        width:20px;
-      }
-
-      .selection {
-        display: inline-block;
-        position: relative;
-        width: 140px;
-      }
-
-      .controls {
-        width: 300px;
-        /*position: absolute;*/
-        display: inline-block;
-        z-index: 100;
-        background-color: rgba(255,255,255,0.9);
-      }
-
-      .long-input {
-        width: 240px;
-        float: right;
-      }
-      .row {
-        display: block;
-
-      }
-      label {
-        color: #2fa3af
-      }
-      .row label {
-        height: 15px;
-        margin-top: 5px;
-        display: inline-block;
-      }
-
-      .disabled {
-        color: #EEE;
-      }
-
-      .elTitle {
-        color: #2fa3af;
-        padding: 2px;
-      }
-
-
-    </style>
-      <div class="lens-container lens-input">
-
-        <div class="controls">
-          <div class="row">
+        <div class='controls'>
+          <div class='row'>
             <label>API Key:</label> 
-            <input is="core-input" class="long-input" value="{{apiKey}}">
+            <input is='iron-input' class='long-input' value='{{apiKey}}'>
           </div>
-          <div class="row"> 
+          <div class='row'> 
             <label>Dataset:</label>
-            <input is="core-input" class="long-input" value="{{dataSet}}">
+            <input is='iron-input' class='long-input' value='{{dataSet}}'>
           </div>
 
 
-          <template if="{{_errorMsg}}">
-            <div class="error_msg">{{_errorMsg}}</div>
+          <template is="dom-if" if='{{_errorMsg}}'>
+            <div class='error_msg'>Error: <span>{{_errorMsg}}</span></div>
           </template>
-          <div class="selection">
-            <label for="columns_selector">Select column:</label>
-            <core-selector id="columns_selector" selected="{{_selectedCols}}" valueattr="label">
-                <template repeat="{{colItem in _columns}}">
-                  <div class="col" label="{{colItem.id}}">{{colItem.label}} <template if={{colItem.type=='type_numeric'}}><span class="numeric">Numeric</span></template></div>
+          <div class='selection'>
+            <label for='columns_selector'>Select column:</label>
+
+            <iron-selector id='columns_selector' attr-for-selected='label' selected='{{_selectedCols}}'>
+                <template is="dom-repeat" items='{{_columns}}'>
+                  <div class='col' label='{{item.id}}'>{{item.label}}<template if={{item.type=='type_numeric'}}><span class='numeric'>Numeric</span></template></div>
                 </template>
-            </core-selector>
+            </iron-selector>
+
           </div>
 
-          <div class="selection">
-            <label for="func_selector">Select function:</label>
-            <core-selector id="func_selector" id="" selected="{{_selectedFunc}}" valueattr="label">
-                  <div class="col" label="frequency">Frequency</div>
-                  <div class="col" label="sum">Sum</div>
-                  <div class="col" label="avg">Average</div>
-                  <div class="col" label="stddev">Standard Deviation</div>
-                  <div class="col" label="variance">Variance</div>
-                  <div class="col" label="max">Max</div>
-                  <div class="col" label="min">Min</div>
-            </core-selector>
+          <div class='selection'>
+            <label for='func_selector'>Select function:</label>
+
+            <iron-selector id='func_selector' selected='{{_selectedFunc}}' attr-for-selected='label'>
+                  <div class='col' label='frequency'>Frequency</div>
+                  <div class='col' label='sum'>Sum</div>
+                  <div class='col' label='avg'>Average</div>
+                  <div class='col' label='stddev'>Standard Deviation</div>
+                  <div class='col' label='variance'>Variance</div>
+                  <div class='col' label='max'>Max</div>
+                  <div class='col' label='min'>Min</div>
+            </iron-selector>
+
           </div>
-          <button id="query_data" on-click="{{queryStatData}}">query data</button>
+          <button id='query_data' on-click='_queryStatData'>query data</button>
 
         </div> <!-- controls -->
 
@@ -156,103 +68,157 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
  
   </template>
 
+</dom-module>
 
   <script>
 
-      Polymer('lens-input-enigma', {
+      Polymer({
 
-        /**
-         *  Register for an API Key at enigma.io
-         *
-         *  @property apiKey
-         *  @type String
-         */
-        apiKey: 'iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4',
+        is: 'lens-input-enigma',
 
-        /**
-         *  Path to the data set you wish to access through enigma.io.
-         *  Examples include:
-         *  - 'us.gov.atf.federal-firearms-licenses.complete-listing'
-         *  - 'us.gov.whitehouse.salaries.2011'
-         *  - 'us.gov.whitehouse.visitor-list'
-         *
-         *  @property dataSet
-         *  @type String
-         */
-        dataSet: 'us.gov.atf.federal-firearms-licenses.complete-listing',//'us.gov.whitehouse.salaries.2011', //'us.gov.whitehouse.visitor-list',
-        _ENIGMA_API_PATH: 'https://api.enigma.io/v2',
-        _META_PATH: '/meta/',
-        _STATS_PATH: '/stats/',
-        _DATA_PATH: '/data/',
+        properties: {
 
-        _columns: [],
+          /**
+           * Output data as JSON Array
+           * @type Array
+           * @default []
+           */
+          output: {
+            type: Array,
+            value: [],
+            notify: true,
+            readOnly: true,
+            observer: '_outputChanged'
+          },
 
-        /**
-         *  Enigma can return all columns, or just selected columns.
-         *  
-         *  @property _selectedCols
-         *  @type Array
-         *  @default [ ]
-         */
-        _selectedCols: [],
+          /**
+           *  Register for an API Key at enigma.io
+           *
+           *  @property apiKey
+           *  @type String
+           */
+          apiKey: {
+            type: String,
+            value: 'iTX3qf5cwspm7ryII3ii5zqeHqUuoO4MctfLJFf2xU8eletxHvcI4'
+          },
 
-        /**
-         *  Enigma can apply a function on the data it returns.
-         *  
-         *  @property _selectedFunc
-         *  @type String
-         *  @default 'frequency'
-         */
-        _selectedFunc: 'frequency',
-        _errorMsg: null,
-        hasData: false,
+          /**
+           *  Path to the data set you wish to access through enigma.io.
+           *  Examples include:
+           *  - 'us.gov.atf.federal-firearms-licenses.complete-listing'
+           *  - 'us.gov.whitehouse.salaries.2011'
+           *  - 'us.gov.whitehouse.visitor-list'
+           *
+           *  @property dataSet
+           *  @type String
+           */
+          dataSet: {
+            type: String,
+            value: 'us.gov.atf.federal-firearms-licenses.complete-listing'
+            //'us.gov.whitehouse.salaries.2011', //'us.gov.whitehouse.visitor-list',
+          },
 
-        /**
-         *  Output data as a JSON Array.
-         *
-         *  @property output
-         *  @type Array
-         *  @default undefined
-         */
-        output: undefined,
+          _columns: {
+            type: Array,
+            value: []
+          },
 
-        domReady: function() {
+          /**
+           *  Enigma can return all columns, or just selected columns.
+           *  
+           *  @property _selectedCols
+           *  @type Array
+           *  @default [ ]
+           */
+          _selectedCols: {
+            type: Array,
+            value: [],
+            notify: true,
+            observer: '_selectedColsChanged'
+          },
 
+          /**
+           *  Enigma can apply a function on the data it returns.
+           *  
+           *  @property _selectedFunc
+           *  @type Array
+           *  @default ['frequency']
+           */
+          _selectedFunc: {
+            type: Array,
+            value: ['frequency'],
+            notify: true,
+            readOnly: true
+          },
+
+          _errorMsg: {
+            type: String,
+            value: ''
+          },
+
+          hasData: {
+            type: Boolean,
+            value: false
+          },
+
+          _ENIGMA_API_PATH: {
+            type: String,
+            value: 'https://api.enigma.io/v2',
+            readOnly: true
+          },
+
+          _META_PATH: {
+            type: String,
+            value: '/meta/',
+            readOnly: true
+          },
+
+          _STATS_PATH: {
+            type: String,
+            value: '/stats/',
+            readOnly: true
+          },
+
+          _DATA_PATH: {
+            type: String,
+            value: '/data/',
+            readOnly: true
+          }
+        },
+
+
+        attached: function() {
           var self = this;
 
-          setTimeout(function() {
-           // self.queryStatData();
-          }, 7000);
-          
-          self.queryMetaData();
-
+          self.async(function() {
+            self._queryMetaData();
+          }, 1);
         },
 
         dataSetChanged: function() {
-          this.queryMetaData();
+          this._queryMetaData();
         },
 
-        queryMetaData: function() {
+        _queryMetaData: function() {
 
           var self = this;
-          var url = self._ENIGMA_API_PATH+self._META_PATH+self.apiKey+"/"+self.dataSet+"?select=namefull&operation=frequency";
+          var url = self._ENIGMA_API_PATH+self._META_PATH+self.apiKey+'/'+self.dataSet+'?select=namefull&operation=frequency';
           self._makeCORSCall(url, self._displayMetaData);
 
         },
 
-        queryStatData: function() {
-
+        _queryStatData: function() {
 
           var self = this;
           var url = self._ENIGMA_API_PATH;
-          if(self._selectedCols==='all') {
-            url = url +self._DATA_PATH+self.apiKey+"/"+self.dataSet;
-          } 
+          if(self._selectedCols === 'all') {
+            url = url +self._DATA_PATH+self.apiKey+'/'+self.dataSet;
+          }
           else {
             url = url + self._STATS_PATH+self.apiKey+
-                      "/"+self.dataSet+
-                      "?select="+self._selectedCols+
-                      "&operation="+self._selectedFunc;
+                      '/'+self.dataSet+
+                      '?select='+self._selectedCols+
+                      '&operation='+self._selectedFunc;
           }
           console.log(url);
           self._makeCORSCall(url, self._displayReturnedData);
@@ -266,9 +232,9 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
              console.log(data);
              console.log('data.success', data.success);
              console.log('data.result', data.result);
-             self.output = [];
+
              if(data.result.frequency) {
-                self.output = data.result.frequency;
+                self._setOutput( data.result.frequency );
              }
              else if (self._selectedCols==='all') {
                 //when all data is selected
@@ -285,7 +251,7 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
                 }
                 */
                
-               self.output = data.result;
+               self._setOutput( data.result );
 
              }
              else {
@@ -316,7 +282,7 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
             self._columns = data.result.columns;
 
             self._columns.unshift({id: 'all',label: 'All Data (columns)'});
-            
+
 
         },
 
@@ -325,9 +291,9 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
             var self = this;
             var method = 'GET';
             var xhr = new XMLHttpRequest();
-            if ("withCredentials" in xhr) {
+            if ('withCredentials' in xhr) {
               xhr.open(method, url, true);
-            } else if (typeof XDomainRequest != "undefined") {
+            } else if (typeof XDomainRequest != 'undefined') {
               xhr = new XDomainRequest();
               xhr.open(method, url);
             } else {
@@ -344,7 +310,7 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
             xhr.onload = function() {
 
               var data = JSON.parse(xhr.response);
-              mycallback.call(self,data);
+              mycallback.call(self, data);
               //self._displayReturnedData(data);
 
             };
@@ -357,14 +323,17 @@ An input component that imports data from <a href="http://enigma.io">Enigma</a>
             console.log('request sent');
         },
 
-        outputChanged: function(){
-          console.log("lens-input-enigma output changed");
-          this.fire('lens-output-changed', this);
-        }
+      /**
+       *  The `lens-output-changed` event is fired whenever changes are observed in `output` 
+       *  @event lens-output-changed
+       */
+        _outputChanged: function(newValue, oldValue){
+          this.fire('lens-output-changed', this.output);
+        },
 
-       
+        _selectedColsChanged: function(v) {
+        }
 
       });
 
   </script>
-</polymer-element>
