@@ -14,7 +14,7 @@ An input component that imports data from <a href='http://enigma.io'>Enigma</a>
 @demo
 -->
 
-<dom-module name='lens-input-enigma' attributes='url output apiKey dataSet'>
+<dom-module name='lens-input-enigma' attributes='url apiKey dataSet'>
 
   <template>
     <link rel='stylesheet' href='lens-input-enigma.css'>
@@ -234,7 +234,7 @@ An input component that imports data from <a href='http://enigma.io'>Enigma</a>
              console.log('data.result', data.result);
 
              if(data.result.frequency) {
-                self._setOutput( data.result.frequency );
+                self._triggerOutput( data.result.frequency );
              }
              else if (self._selectedCols==='all') {
                 //when all data is selected
@@ -251,13 +251,13 @@ An input component that imports data from <a href='http://enigma.io'>Enigma</a>
                 }
                 */
                
-               self._setOutput( data.result );
+               self._triggerOutput( data.result );
 
              }
              else {
                 for(key in data.result) {
                   if(key!='success') {
-                    self.output = [{'column': data.info.column.label , key :data.result[key]}];
+                    self._triggerOutput( [{'column': data.info.column.label , key :data.result[key]}] );
                   }
                 }
 
@@ -329,6 +329,10 @@ An input component that imports data from <a href='http://enigma.io'>Enigma</a>
        */
         _outputChanged: function(newValue, oldValue){
           this.fire('lens-output-changed', this.output);
+        },
+
+        _triggerOutput: function( val ) {
+          this._setOutput(val);
         },
 
         _selectedColsChanged: function(v) {

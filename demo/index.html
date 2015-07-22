@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>lens-input-enigma Demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../lens-input-enigma.html">
 
     <style>
@@ -71,11 +71,20 @@
 
       <section>
         <label>CSV Output:</label><span class="count"></span>
-        <pre></pre>
+        <pre id="output"></pre>
       </section>
 
       <script>
-        var component = document.querySelector('#component');
+
+        window.onload = function() {
+          var component = document.querySelector('#component');
+          var preOutput = document.getElementById('output');
+
+               // update output
+          document.addEventListener('lens-output-changed', function(val) {
+            preOutput.textContent = JSON.stringify(val.detail, undefined, 2);
+          });
+        }
       </script>
 
   </body>
